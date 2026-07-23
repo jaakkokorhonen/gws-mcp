@@ -1,4 +1,4 @@
-# Falko MCP Server
+# GWS MCP Server
 
 A FastMCP-based server designed to integrate Google Workspace Administration with LLM-powered interfaces. This server allows LLMs to query and mutate Google Workspace configurations, including Users, Groups, Licenses, Devices, Chrome Policies, and more.
 
@@ -17,12 +17,27 @@ We plan to transition this MCP Server to a containerized, multi-tenant backend a
 
 ## Setup
 
+### 1. Create Google OAuth Desktop Credentials
+To authenticate locally, the server requires OAuth 2.0 Desktop Application credentials:
+1. Open the [Google Cloud Console](https://console.cloud.google.com/).
+2. Select your Google Workspace project.
+3. Go to **APIs & Services** > **Credentials**.
+4. Click **Create Credentials** > **OAuth client ID**.
+5. Set the **Application type** to **Desktop app**.
+6. Provide a descriptive name and click **Create**.
+7. Download the credentials JSON file.
+8. Save this file in the `gws-mcp` directory (the filename must start with `client_secret_` and end with `.json`).
+
+### 2. Installation
 1. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-2. Place your Google API `client_secret_*.json` in the root of the project.
-3. Run the MCP server. FastMCP will automatically trigger an interactive OAuth flow on the first run, creating `token.json`.
+2. Execute the verification script to trigger the interactive browser authentication:
+   ```bash
+   .venv/bin/python test_auth.py
+   ```
+   This will open a browser window requesting authorization for the specified scopes and automatically generate a local `token.json` file.
 
 ## Supported APIs
 
