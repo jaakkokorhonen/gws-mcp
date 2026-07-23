@@ -1,0 +1,9 @@
+/path/to/your/falko_mcp/.venv/bin/python
+  → /Users/jaakkokorhonen/Documents/falko.fi/falko_mcp/.venv/bin/python
+
+/path/to/your/falko_mcp/mcp_server.py
+  → /Users/jaakkokorhonen/Documents/falko.fi/falko_mcp/mcp_server.py
+
+/path/to/your/client_secret.json
+  → /Users/jaakkokorhonen/Documents/falko.fi/client_secret.json
+
