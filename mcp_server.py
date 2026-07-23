@@ -78,8 +78,6 @@ SCOPES = [
     "https://www.googleapis.com/auth/apps.licensing",
     # Google Vault (eDiscovery)
     "https://www.googleapis.com/auth/ediscovery",
-    # Access Context Manager — Context-Aware Access policies
-    "https://www.googleapis.com/auth/accesscontextmanager",
     # Chrome Policy API — manage Chrome browser / device policies
     "https://www.googleapis.com/auth/chrome.management.policy",
     # Cloud Identity Policies — DLP and org policy rules
