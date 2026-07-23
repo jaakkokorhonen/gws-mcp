@@ -86,7 +86,7 @@ SCOPES = [
     "https://www.googleapis.com/auth/cloud-identity.policies",
 ]
 
-mcp = FastMCP("falko-admin-mcp")
+mcp = FastMCP("gws-mcp")
 
 # ---------------------------------------------------------------------------
 # Thread-safe credentials cache
