@@ -82,6 +82,32 @@ SCOPES = [
     "https://www.googleapis.com/auth/chrome.management.policy",
     # Cloud Identity Policies — DLP and org policy rules
     "https://www.googleapis.com/auth/cloud-identity.policies",
+    # Calendar API — Read and write calendar events
+    "https://www.googleapis.com/auth/calendar",
+    # Drive API — Access files and folders
+    "https://www.googleapis.com/auth/drive",
+    # Drive Activity API — View historical actions on Drive objects
+    "https://www.googleapis.com/auth/drive.activity.readonly",
+    # Docs API — Read Google Documents
+    "https://www.googleapis.com/auth/documents",
+    # Sheets API — Read and write Google Spreadsheets
+    "https://www.googleapis.com/auth/spreadsheets",
+    # Slides API — Read Google Presentations
+    "https://www.googleapis.com/auth/presentations",
+    # Forms API — View responses
+    "https://www.googleapis.com/auth/forms.body.readonly",
+    # Chat API — Read spaces and post messages
+    "https://www.googleapis.com/auth/chat.spaces.readonly",
+    "https://www.googleapis.com/auth/chat.messages.create",
+    # Meet API — View meet spaces
+    "https://www.googleapis.com/auth/meetings.space.readonly",
+    # Marketplace SDK — Verify billing checkouts
+    "https://www.googleapis.com/auth/apps.order",
+    # Reports API — Audit logs and usage statistics
+    "https://www.googleapis.com/auth/admin.reports.audit.readonly",
+    "https://www.googleapis.com/auth/admin.reports.usage.readonly",
+    # Apps Script API — Execute deployed Apps Scripts
+    "https://www.googleapis.com/auth/drive.scripts",
 ]
 
 mcp = FastMCP("gws-mcp")
@@ -1097,6 +1123,412 @@ def identity_delete_policy(policy_name: str) -> str:
     try:
         service.policies().delete(name=policy_name).execute()
         return json.dumps({"status": "success"}, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+
+# ===========================================================================
+# 10. CALENDAR MANAGEMENT (Calendar API)
+# ===========================================================================
+@mcp.tool()
+def calendar_list_events(calendar_id: str = "primary", time_min: str = None, time_max: str = None, page_token: str = None) -> str:
+    """List events from a Google Calendar.
+    
+    Parameters
+    ----------
+    calendar_id: Calendar identifier. Defaults to 'primary'.
+    time_min: Lower bound (exclusive) for an event's end time (RFC 3339 format).
+    time_max: Upper bound (exclusive) for an event's start time (RFC 3339 format).
+    page_token: Token for retrieving the next page of results.
+    """
+    service = get_service("calendar", "v3")
+    kwargs = {"calendarId": calendar_id}
+    if time_min:
+        kwargs["timeMin"] = time_min
+    if time_max:
+        kwargs["timeMax"] = time_max
+    if page_token:
+        kwargs["pageToken"] = page_token
+    try:
+        result = service.events().list(**kwargs).execute()
+        return json.dumps(result, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+@mcp.tool()
+def calendar_insert_event(summary: str, start_time: str, end_time: str, calendar_id: str = "primary", description: str = None, attendees_emails: list[str] = None) -> str:
+    """Insert a new event into a Google Calendar.
+    
+    Parameters
+    ----------
+    summary: Title of the event.
+    start_time: Start time of the event (RFC 3339 format, e.g., '2026-07-24T09:00:00Z').
+    end_time: End time of the event (RFC 3339 format).
+    calendar_id: Calendar identifier. Defaults to 'primary'.
+    description: Description of the event.
+    attendees_emails: List of attendee email addresses.
+    """
+    service = get_service("calendar", "v3")
+    body = {
+        "summary": summary,
+        "start": {"dateTime": start_time},
+        "end": {"dateTime": end_time}
+    }
+    if description:
+        body["description"] = description
+    if attendees_emails:
+        body["attendees"] = [{"email": email} for email in attendees_emails]
+    try:
+        result = service.events().insert(calendarId=calendar_id, body=body).execute()
+        return json.dumps(result, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+@mcp.tool()
+def calendar_delete_event(event_id: str, calendar_id: str = "primary") -> str:
+    """Delete an event from a Google Calendar.
+    
+    Parameters
+    ----------
+    event_id: Identifier of the event to delete.
+    calendar_id: Calendar identifier. Defaults to 'primary'.
+    """
+    service = get_service("calendar", "v3")
+    try:
+        service.events().delete(calendarId=calendar_id, eventId=event_id).execute()
+        return json.dumps({"status": "success"}, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+
+# ===========================================================================
+# 11. DRIVE & ACTIVITY MANAGEMENT (Drive + Drive Activity API)
+# ===========================================================================
+@mcp.tool()
+def drive_list_files(query: str = None, page_size: int = 100, page_token: str = None) -> str:
+    """List or search files in Google Drive.
+    
+    Parameters
+    ----------
+    query: Search query (e.g. "name contains 'status'"). See Drive API docs for details.
+    page_size: Maximum number of files to return (max 100).
+    page_token: Token for retrieving the next page.
+    """
+    service = get_service("drive", "v3")
+    kwargs = {"pageSize": min(page_size, 100)}
+    if query:
+        kwargs["q"] = query
+    if page_token:
+        kwargs["pageToken"] = page_token
+    try:
+        result = service.files().list(**kwargs).execute()
+        return json.dumps(result, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+@mcp.tool()
+def drive_get_file_metadata(file_id: str) -> str:
+    """Get metadata for a specific file in Google Drive.
+    
+    Parameters
+    ----------
+    file_id: The ID of the file.
+    """
+    service = get_service("drive", "v3")
+    try:
+        result = service.files().get(fileId=file_id).execute()
+        return json.dumps(result, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+@mcp.tool()
+def drive_list_activity(file_id: str = None, page_size: int = 20, page_token: str = None) -> str:
+    """Retrieve historical activity logs for Google Drive objects.
+    
+    Parameters
+    ----------
+    file_id: Target file ID to filter activity. If omitted, returns domain/drive-wide activity.
+    page_size: Maximum number of activities to return.
+    page_token: Token for retrieving the next page.
+    """
+    service = get_service("driveactivity", "v2")
+    body = {"pageSize": page_size}
+    if file_id:
+        body["itemName"] = f"items/{file_id}"
+    if page_token:
+        body["pageToken"] = page_token
+    try:
+        result = service.activity().query(body=body).execute()
+        return json.dumps(result, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+
+# ===========================================================================
+# 12. DOCS, SHEETS, SLIDES & FORMS (Google Workspace Editors)
+# ===========================================================================
+@mcp.tool()
+def docs_get_document(document_id: str) -> str:
+    """Get the content structure of a Google Document.
+    
+    Parameters
+    ----------
+    document_id: The ID of the document.
+    """
+    service = get_service("docs", "v1")
+    try:
+        result = service.documents().get(documentId=document_id).execute()
+        return json.dumps(result, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+@mcp.tool()
+def sheets_read_range(spreadsheet_id: str, range_name: str) -> str:
+    """Read a range of cells from a Google Spreadsheet.
+    
+    Parameters
+    ----------
+    spreadsheet_id: The ID of the spreadsheet.
+    range_name: The A1 notation range (e.g. 'Sheet1!A1:B10').
+    """
+    service = get_service("sheets", "v4")
+    try:
+        result = service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=range_name).execute()
+        return json.dumps(result, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+@mcp.tool()
+def sheets_write_range(spreadsheet_id: str, range_name: str, values_json: str) -> str:
+    """Write a range of cells to a Google Spreadsheet.
+    
+    Parameters
+    ----------
+    spreadsheet_id: The ID of the spreadsheet.
+    range_name: The A1 notation range (e.g. 'Sheet1!A1:B10').
+    values_json: JSON string representation of a 2D list (e.g. '[["Col1", "Col2"], [1, 2]]').
+    """
+    values, err = _parse_json(values_json, "values_json")
+    if err:
+        return err
+    service = get_service("sheets", "v4")
+    body = {"values": values}
+    try:
+        result = service.spreadsheets().values().update(
+            spreadsheetId=spreadsheet_id,
+            range=range_name,
+            valueInputOption="RAW",
+            body=body
+        ).execute()
+        return json.dumps(result, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+@mcp.tool()
+def slides_get_presentation(presentation_id: str) -> str:
+    """Get the structure of a Google Slides presentation.
+    
+    Parameters
+    ----------
+    presentation_id: The ID of the presentation.
+    """
+    service = get_service("slides", "v1")
+    try:
+        result = service.presentations().get(presentationId=presentation_id).execute()
+        return json.dumps(result, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+@mcp.tool()
+def forms_list_responses(form_id: str) -> str:
+    """List responses from a Google Form.
+    
+    Parameters
+    ----------
+    form_id: The ID of the form.
+    """
+    service = get_service("forms", "v1")
+    try:
+        result = service.forms().responses().list(formId=form_id).execute()
+        return json.dumps(result, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+
+# ===========================================================================
+# 13. CHAT & MEET MANAGEMENT (Chat + Meet API)
+# ===========================================================================
+@mcp.tool()
+def chat_list_spaces(page_token: str = None) -> str:
+    """List spaces the authenticated account belongs to in Google Chat.
+    
+    Parameters
+    ----------
+    page_token: Token for retrieving the next page.
+    """
+    service = get_service("chat", "v1")
+    kwargs = {}
+    if page_token:
+        kwargs["pageToken"] = page_token
+    try:
+        result = service.spaces().list(**kwargs).execute()
+        return json.dumps(result, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+@mcp.tool()
+def chat_create_message(space_name: str, text: str) -> str:
+    """Send a message to a Google Chat space.
+    
+    Parameters
+    ----------
+    space_name: Resource name of the space (e.g. 'spaces/AAAAAAAAAAA').
+    text: Message body content.
+    """
+    service = get_service("chat", "v1")
+    body = {"text": text}
+    try:
+        result = service.spaces().messages().create(parent=space_name, body=body).execute()
+        return json.dumps(result, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+@mcp.tool()
+def meet_create_space() -> str:
+    """Create a new Google Meet space (video call room)."""
+    service = get_service("meet", "v2")
+    try:
+        result = service.spaces().create(body={}).execute()
+        return json.dumps(result, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+
+# ===========================================================================
+# 14. MARKETPLACE & LICENSING (Licensing + Workspace Marketplace SDK)
+# ===========================================================================
+@mcp.tool()
+def licensing_get_license_assignment(product_id: str, sku_id: str, user_id: str) -> str:
+    """Get a specific license assignment details.
+    
+    Parameters
+    ----------
+    product_id: ID of the product (e.g., 'Google-Apps').
+    sku_id: ID of the SKU (e.g., '1010020025').
+    user_id: The email address of the user.
+    """
+    service = get_service("licensing", "v1")
+    try:
+        result = service.licenseAssignments().get(
+            productId=product_id, skuId=sku_id, userId=user_id
+        ).execute()
+        return json.dumps(result, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+@mcp.tool()
+def marketplace_get_app_installation(addon_id: str) -> str:
+    """Get domain-wide installation status of a Marketplace Add-on.
+    
+    Parameters
+    ----------
+    addon_id: The ID of the add-on.
+    """
+    service = get_service("appsmarket", "v2")
+    try:
+        result = service.customerLicense().get(addonId=addon_id).execute()
+        return json.dumps(result, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+
+# ===========================================================================
+# 15. AUDIT & USAGE REPORTS (Admin SDK Reports API)
+# ===========================================================================
+@mcp.tool()
+def reports_list_activities(user_key: str = "all", application_name: str = "login", page_token: str = None, start_time: str = None) -> str:
+    """List audit log activity reports for the domain.
+    
+    Parameters
+    ----------
+    user_key: Profile ID or email of the user, or 'all'.
+    application_name: Log application to search (e.g., 'login', 'admin', 'drive', 'token', 'groups').
+    page_token: Token for retrieving the next page.
+    start_time: Return logs after this time (RFC 3339 format, e.g., '2026-07-24T00:00:00Z').
+    """
+    service = get_service("admin", "reports_v1")
+    kwargs = {"userKey": user_key, "applicationName": application_name}
+    if page_token:
+        kwargs["pageToken"] = page_token
+    if start_time:
+        kwargs["startTime"] = start_time
+    try:
+        result = service.activities().list(**kwargs).execute()
+        return json.dumps(result, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+@mcp.tool()
+def reports_get_usage_report(user_key: str = "all", date: str = None) -> str:
+    """Get usage reports for users or the domain.
+    
+    Parameters
+    ----------
+    user_key: Profile ID or email of the user, or 'all'.
+    date: Specific report date (format: YYYY-MM-DD). Must be within last 180 days.
+    """
+    if not date:
+        return json.dumps({"error": "date parameter is required in format YYYY-MM-DD"}, indent=2)
+    service = get_service("admin", "reports_v1")
+    try:
+        result = service.userUsageReport().get(userKey=user_key, date=date).execute()
+        return json.dumps(result, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+
+# ===========================================================================
+# 16. APPS SCRIPT EXECUTION (Apps Script API)
+# ===========================================================================
+@mcp.tool()
+def script_run_function(script_id: str, function_name: str, parameters_json: str = None) -> str:
+    """Execute a deployed Apps Script function.
+    
+    NOTE: The script must be deployed as an API Executable.
+    
+    Parameters
+    ----------
+    script_id: The ID of the Apps Script project.
+    function_name: Name of the function to execute.
+    parameters_json: JSON string of parameters list to pass to the function (e.g. '["arg1", 2]').
+    """
+    parameters = None
+    if parameters_json:
+        parameters, err = _parse_json(parameters_json, "parameters_json")
+        if err:
+            return err
+    service = get_service("script", "v1")
+    body = {"function": function_name}
+    if parameters:
+        body["parameters"] = parameters
+    try:
+        result = service.scripts().run(scriptId=script_id, body=body).execute()
+        return json.dumps(result, indent=2)
+    except HttpError as e:
+        return e.content.decode("utf-8")
+
+@mcp.tool()
+def script_list_deployments(script_id: str) -> str:
+    """List deployments of a Google Apps Script project.
+    
+    Parameters
+    ----------
+    script_id: The ID of the Apps Script project.
+    """
+    service = get_service("script", "v1")
+    try:
+        result = service.projects().deployments().list(scriptId=script_id).execute()
+        return json.dumps(result, indent=2)
     except HttpError as e:
         return e.content.decode("utf-8")
 
