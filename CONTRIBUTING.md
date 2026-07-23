@@ -17,6 +17,67 @@ Thank you for contributing! When adding new features or modifying existing code,
 3. **No Pagination Automation**
    Do not implement `while True` loops to exhaustively fetch all pages of a Google API list endpoint. In large enterprise environments, this will result in out-of-memory errors or extremely large context windows. Provide a `page_token` (or similar) optional parameter to your MCP Tool, let the Google API return a `nextPageToken` in the payload, and allow the LLM or client to decide if it wants to request the next page.
 
+4. **Destructive Operations Require a Confirmation Guard**
+   Any tool that performs an **irreversible** action (deleting a file, deleting a calendar event, permanently removing a resource) **must** include a `confirm: bool = False` parameter. The tool must return an explanatory string without performing any action when `confirm` is `False`.
+
+   ```python
+   def drive_delete_file(file_id: str, confirm: bool = False) -> str:
+       """Permanently delete a file from Google Drive.
+
+       Parameters
+       ----------
+       file_id : str
+           ID of the file to delete.
+           Example: ``"1BxSjkD7T4pMa3c8EXAMPLEiRwY9Z"``
+       confirm : bool
+           Must be ``True`` to execute the deletion. When ``False`` (default)
+           the function returns a description of what *would* be deleted
+           without making any changes.
+       """
+       if not confirm:
+           return (
+               f"Dry-run: would permanently delete file '{file_id}'. "
+               "Pass confirm=True to execute."
+           )
+       # ... actual deletion logic
+   ```
+
+   This convention applies to — but is not limited to — `drive_delete_file`, `calendar_delete_event`, and any future tool that calls a Google API `delete` or `remove` method.
+
+5. **Document Resource Name Formats with a Concrete Example**
+   Many Google APIs use structured resource names (`spaces/XXXXX`, `searchapplications/default`, `projects/{id}`) rather than plain identifiers. An LLM cannot infer the correct format from a parameter name alone.
+
+   **Every parameter whose value is a resource name or opaque ID must include an `Example:` line in the docstring:**
+
+   ```python
+   def chat_send_message(space_name: str, text: str) -> str:
+       """Send a message to a Google Chat space.
+
+       Parameters
+       ----------
+       space_name : str
+           Resource name of the target space.
+           Example: ``"spaces/AAAABBBBCCCC"``
+           Retrieve with ``chat_list_spaces``.
+       """
+   ```
+
+   **How to discover the correct format during development:**
+   Before implementing a new tool that consumes a resource ID, run the corresponding list/enumerate call directly in a Python shell:
+
+   ```python
+   from mcp_server import get_service
+   import json
+
+   svc = get_service("<api>", "<version>")
+   result = svc.<resource>().list().execute()
+   print(json.dumps(result, indent=2))
+   # Inspect the "name" or "id" field of the first item and copy its
+   # exact format into the docstring Example: line.
+   ```
+
+   This one-time check also surfaces edition restrictions (e.g. Cloud Search returns 403 on Business Starter) before any implementation work begins.
+
 ## Testing Your Changes
 
 1. Run a syntax check before committing:
