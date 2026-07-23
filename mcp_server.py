@@ -720,7 +720,11 @@ def admin_create_orgunit(
 
 @mcp.tool()
 def identity_list_devices(customer: str = "my_customer", page_size: int = 0, page_token: str = None) -> str:
-    """List devices registered in Cloud Identity."""
+    """List devices registered in Cloud Identity.
+    
+    NOTE: Requires the OAuth scope 'https://www.googleapis.com/auth/cloud-identity.devices.readonly'
+    to be added to the OAuth Consent screen in Google Cloud Console. Otherwise, this returns 403 Forbidden.
+    """
     service = get_service("cloudidentity", "v1")
     try:
         kwargs = {"customer": customer}

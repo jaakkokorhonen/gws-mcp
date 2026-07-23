@@ -100,7 +100,10 @@ except Exception as e:
 
 # 8. Devices
 try:
-    # Google Cloud Identity Devices API expects 'customer' query parameter
+    # Google Cloud Identity Devices API expects 'customer' query parameter.
+    # Note: This will result in a 403 error (saved in devices_error.json) unless the scope
+    # 'https://www.googleapis.com/auth/cloud-identity.devices.readonly' has been configured
+    # on the OAuth Consent Screen in Google Cloud Console.
     res = identity_service.devices().list(customer="my_customer").execute()
     save_raw("devices.json", res)
 except Exception as e:

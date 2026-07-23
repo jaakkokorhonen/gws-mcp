@@ -49,3 +49,27 @@ To authenticate locally, the server requires OAuth 2.0 Desktop Application crede
 * Chrome Policy API
 * Access Context Manager API
 * Cloud Identity Policies API
+
+## GWS Configuration Extraction
+
+A helper script `gws_json.py` is included to dump raw Google Workspace configuration data directly to local files inside the `gws_raw_data/` directory.
+
+Run the extraction script:
+```bash
+.venv/bin/python gws_json.py
+```
+
+## Troubleshooting
+
+### Cloud Identity Devices Scope (invalid_scope / 403 Permission Denied)
+The `cloud-identity.devices` scope is excluded from the default local credentials list. Attempting to list devices via `identity_list_devices` will result in `403 Request had insufficient authentication scopes`.
+
+To enable device management sustainably:
+1. Go to the **Google Cloud Console**.
+2. Enable the **Cloud Identity API** (`cloudidentity.googleapis.com`) on your project.
+3. Navigate to **APIs & Services** > **Google Auth Platform** > **Data Access** (or **OAuth consent screen**).
+4. Click **Add Scopes** and manually enter the scope:
+   `https://www.googleapis.com/auth/cloud-identity.devices.readonly`
+5. Save the configuration and refresh the console page.
+6. Re-add the scope to the `SCOPES` array in `mcp_server.py`, delete the local `token.json`, and run `.venv/bin/python test_auth.py` again to complete authorization.
+
