@@ -587,13 +587,21 @@ def admin_list_skus() -> str:
 def licensing_list_user_licenses(user_email: str) -> str:
     """List the active license assignments for a specific user."""
     service = get_service("licensing", "v1")
-    try:
-        results = service.licenseAssignments().listForUser(
-            userId=user_email
-        ).execute()
-        return json.dumps(results, indent=2)
-    except HttpError as e:
-        return e.content.decode("utf-8")
+    user_licenses = []
+    for prod_id, prod_info in KNOWN_GWS_PRODUCTS.items():
+        for sku_id in prod_info["skus"].keys():
+            try:
+                res = service.licenseAssignments().get(
+                    productId=prod_id, skuId=sku_id, userId=user_email
+                ).execute()
+                user_licenses.append(res)
+            except HttpError as e:
+                # 404 is normal and indicates the user lacks this specific license.
+                if e.resp.status != 404:
+                    return e.content.decode("utf-8")
+            except Exception as e:
+                return json.dumps({"error": str(e)}, indent=2)
+    return json.dumps(user_licenses, indent=2)
 
 
 @mcp.tool()
@@ -714,13 +722,8 @@ def admin_create_orgunit(
 def identity_list_devices(customer: str = "my_customer", page_size: int = 0, page_token: str = None) -> str:
     """List devices registered in Cloud Identity."""
     service = get_service("cloudidentity", "v1")
-    parent = (
-        f"customers/{customer}"
-        if not customer.startswith("customers/")
-        else customer
-    )
     try:
-        kwargs = {"parent": parent}
+        kwargs = {"customer": customer}
         if page_size > 0:
             kwargs["pageSize"] = page_size
         if page_token:
