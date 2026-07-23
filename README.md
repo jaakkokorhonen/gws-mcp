@@ -5,43 +5,9 @@ A FastMCP-based server designed to integrate Google Workspace Administration wit
 ## Architecture
 
 * **Framework:** [FastMCP](https://github.com/jlowin/fastmcp)
-* **Auth:** Uses a local `client_secret.json` and interactive OAuth 2.0 flow (`InstalledAppFlow`) to generate a `token.json`. This is intentional for a locally-run MCP server: the token is stored on the same machine that runs the server and is only accessible to the authenticated admin. See [Future Plans](#future-plans-server-side-mcp) for the multi-tenant path.
-* **Error Handling:** All tools return the **raw JSON string** from the Google API for both success and error responses — including HTTP errors. We deliberately rely on the **native `HttpError` content** (`e.content.decode("utf-8")`) rather than wrapping errors in custom exception classes or log statements. The rationale: the raw Google error payload contains the exact HTTP status code, error reason, and message that the LLM needs to self-correct (e.g. `insufficientPermissions`, `notFound`, `quotaExceeded`). Custom wrappers would lose this signal. See [Error Handling Design](#error-handling-design) for details.
+* **Auth:** Currently uses a local `client_secret.json` and interactive OAuth 2.0 flow (`InstalledAppFlow`) to generate a `token.json`.
 * **API Responses:** All tools are designed to be "pass-through". We return the **raw JSON** string directly from the Google API for both success responses and errors.
 * **Pagination:** Endpoints requiring pagination (such as `admin_list_users`) accept an optional `page_token`. They do *not* automatically iterate through pages to prevent out-of-memory errors on large Google Workspace domains. The LLM or client is responsible for calling the endpoint again with the `nextPageToken` if more results are needed.
-
-## Error Handling Design
-
-Every tool in this server follows the same error handling pattern:
-
-```python
-try:
-    result = service.resource().method(**kwargs).execute()
-    return json.dumps(result, indent=2)
-except HttpError as e:
-    return e.content.decode("utf-8")
-```
-
-**Why we return raw `HttpError` content instead of raising or wrapping:**
-
-1. **LLM self-correction**: The raw Google error JSON contains structured fields (`status`, `error.code`, `error.errors[].reason`, `error.message`) that the LLM can parse and act on — for example, recognising `insufficientPermissions` and asking the user to add a scope, or retrying with different parameters on `invalid` input errors.
-2. **No information loss**: Custom exception wrappers typically stringify errors into a single message, discarding the `reason` and `domain` fields. The native payload preserves everything.
-3. **Consistency**: Every tool behaves identically — success and failure both return a JSON string. The LLM does not need to distinguish between exception types.
-4. **Scope for evolution**: When the server transitions to a containerised backend, logging can be added as a side effect (e.g. `logger.error(e.content)`) without changing the return contract.
-
-The one case where this pattern needs care: **do not log `e.content` to stdout in the local server**, as it may contain sensitive user data visible in terminal output.
-
-## Google Vault
-
-The server includes [Google Vault API](https://developers.google.com/vault) tools (`vault_*`). Vault is Google Workspace's eDiscovery and legal hold product.
-
-**Important scope and edition constraints:**
-
-* Vault is only available on **Business Plus, Enterprise, Education Standard/Plus, and Frontline** editions. It is **not available** on Business Starter, Business Standard, or Essentials.
-* The OAuth scope required is `https://www.googleapis.com/auth/ediscovery` (read/write) or `https://www.googleapis.com/auth/ediscovery.readonly`.
-* If your domain does not have Vault enabled, all `vault_*` tools will return a `403 SERVICE_DISABLED` error. To verify: Admin Console → Apps → Google Workspace → Vault → check that the service is ON.
-* DWD is **not required** for Vault — the authenticating admin's own OAuth credentials are sufficient, provided the account has the **Vault Admin** or **Vault User** role in Admin Console.
-* Vault matters data is **legally sensitive**. Treat all `vault_*` tool outputs as confidential. Do not log responses or expose them outside of a secure audit context.
 
 ## Future Plans: Server-Side MCP
 
@@ -73,23 +39,12 @@ To authenticate locally, the server requires OAuth 2.0 Desktop Application crede
    ```
    This will open a browser window requesting authorization for the specified scopes and automatically generate a local `token.json` file.
 
-### Adding New Scopes
-
-When a new API is added, its OAuth scopes must be added to the `SCOPES` list in `mcp_server.py`. After editing `SCOPES`:
-
-```bash
-rm token.json
-.venv/bin/python test_auth.py
-```
-
-The old `token.json` is tied to the previously authorised scope set and will cause `invalid_grant` or `insufficientPermissions` errors if reused after a scope change.
-
 ## Supported APIs
 
 * Google Admin Directory API (Users, Groups, Org Units)
 * Google Groups Settings API
 * Google Enterprise License Manager API
-* Google Vault API *(Business Plus or higher — see [Google Vault](#google-vault))*
+* Google Vault API
 * Cloud Identity Devices API
 * Chrome Policy API
 * Access Context Manager API
@@ -118,8 +73,57 @@ To enable device management sustainably:
 5. Save the configuration and refresh the console page.
 6. Re-add the scope to the `SCOPES` array in `mcp_server.py`, delete the local `token.json`, and run `.venv/bin/python test_auth.py` again to complete authorization.
 
-### Vault returns 403 SERVICE_DISABLED
-Your domain does not have Google Vault enabled. Vault requires **Business Plus or higher**. Check Admin Console → Apps → Google Workspace → Vault.
 
-### token.json errors after adding new APIs
-Any scope change invalidates the existing `token.json`. Delete it and re-run `test_auth.py` to reauthorise. See [Adding New Scopes](#adding-new-scopes).
+## Feature Roadmap & Implementation Plans
+
+Below is the structured roadmap for planned Workspace integrations:
+
+### 1. Gmail API Integration
+* **Feasibility:** High
+* **Scope:** `https://www.googleapis.com/auth/gmail.modify`
+* **Tools:** `gmail_list_messages`, `gmail_get_message`, `gmail_send_message`
+* **Plan:** Add MIME serialization helpers in `mcp_server.py` and query with pagination.
+
+### 2. Calendar API Integration
+* **Feasibility:** High
+* **Scope:** `https://www.googleapis.com/auth/calendar`
+* **Tools:** `calendar_list_events`, `calendar_insert_event`, `calendar_delete_event`
+* **Plan:** Standardize date-time checks to handle ISO 8601 strings from LLM prompts.
+
+### 3. Drive API + Drive Activity API Integration
+* **Feasibility:** High
+* **Scopes:** `https://www.googleapis.com/auth/drive`, `https://www.googleapis.com/auth/drive.activity.readonly`
+* **Tools:** `drive_list_files`, `drive_get_file_metadata`, `drive_list_activity`
+* **Plan:** Return resource references/links to keep LLM context footprint small.
+
+### 4. Docs, Sheets, Slides and Forms API Integration
+* **Feasibility:** High
+* **Scopes:** Docs, Spreadsheets, Presentations, and Forms readonly scopes.
+* **Tools:** `docs_get_document`, `sheets_read_range`, `sheets_write_range`, `slides_get_presentation`, `forms_list_responses`
+* **Plan:** Abstract complex batch update payloads into simpler MCP interfaces.
+
+### 5. Chat API and Meet API Integration
+* **Feasibility:** Medium
+* **Scopes:** Chat spaces read/write and Meet space metadata.
+* **Tools:** `chat_list_spaces`, `chat_create_message`, `meet_create_space`
+* **Plan:** Support space creation and messaging; document Chatbot Console activation.
+
+### 6. Cloud Search API Integration
+* **Feasibility:** High (requires Enterprise Workspace)
+* **Scope:** `https://www.googleapis.com/auth/cloud_search.query`
+* **Tools:** `cloudsearch_search`
+* **Plan:** Build query client; return descriptive error when Search Application is missing.
+
+### 7. Keep, Tasks, Classroom and Apps Script API Integration
+* **Feasibility:** High
+* **Scopes:** Keep, Tasks, Classroom readonly, and Apps Script run permissions.
+* **Tools:** `keep_list_notes`, `tasks_list_tasks`, `classroom_list_courses`, `script_run`
+* **Plan:** Add direct tasks/notes listing; apply strict input filters to Apps Script execution.
+
+### 8. Google Workspace Marketplace SDK / Licensing API Integration
+* **Feasibility:** High
+* **Scopes:** `licensing` (active) and `appsmarket` SDK scopes.
+* **Tools:** `licensing_get_license_assignment`, `marketplace_get_app_installation`
+* **Plan:** Expand current license checkouts and audit application installations.
+
+
