@@ -80,6 +80,8 @@ SCOPES = [
     "https://www.googleapis.com/auth/ediscovery",
     # Chrome Policy API — manage Chrome browser / device policies
     "https://www.googleapis.com/auth/chrome.management.policy",
+    # Admin Directory Devices — read ChromeOS devices
+    "https://www.googleapis.com/auth/admin.directory.device.chromeos.readonly",
     # Cloud Identity Policies — DLP and org policy rules
     "https://www.googleapis.com/auth/cloud-identity.policies",
 ]
