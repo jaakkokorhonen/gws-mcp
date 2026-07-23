@@ -1,0 +1,14 @@
+{
+  "kind": "admin#directory#customer",
+  "id": "C04h6t51g",
+  "etag": "\"MuBF61fZ6eIjI81hoRhKEXyx1naL3QsylnH3YakomIY/M-4IoS-8tT-ngtAVIOJ9gVTTcPw\"",
+  "customerDomain": "falko.fi",
+  "alternateEmail": "jaakko.korhonen@gmail.com",
+  "postalAddress": {
+    "contactName": "Jaakko Korhonen",
+    "organizationName": "Falk\u00f6",
+    "countryCode": "FI"
+  },
+  "language": "en",
+  "customerCreationTime": "2026-07-21T12:11:34.461Z"
+}

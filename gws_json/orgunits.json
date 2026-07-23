@@ -1,0 +1,25 @@
+{
+  "kind": "admin#directory#orgUnits",
+  "etag": "\"MuBF61fZ6eIjI81hoRhKEXyx1naL3QsylnH3YakomIY/xu3Bk04QJJPnuIfVgKsLsh-rl7I\"",
+  "organizationUnits": [
+    {
+      "kind": "admin#directory#orgUnit",
+      "etag": "\"MuBF61fZ6eIjI81hoRhKEXyx1naL3QsylnH3YakomIY/Y9IAzPdzuRSxGjukltdzd0kGOyI\"",
+      "name": "Browser Management",
+      "orgUnitPath": "/Browser Management",
+      "orgUnitId": "id:03ph8a2z36qachz",
+      "parentOrgUnitPath": "/",
+      "parentOrgUnitId": "id:03ph8a2z3am9756"
+    },
+    {
+      "kind": "admin#directory#orgUnit",
+      "etag": "\"MuBF61fZ6eIjI81hoRhKEXyx1naL3QsylnH3YakomIY/oxF80kQf4P1L6HYZuwqYsZlq4U8\"",
+      "name": "Workspace Guests",
+      "description": "A dedicated Org Unit for external guests",
+      "orgUnitPath": "/Workspace Guests",
+      "orgUnitId": "id:03ph8a2z2wy21k5",
+      "parentOrgUnitPath": "/",
+      "parentOrgUnitId": "id:03ph8a2z3am9756"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "error": {
+    "code": 400,
+    "message": "Invalid skuId: Google-Drive-storage-20gb",
+    "errors": [
+      {
+        "message": "Invalid skuId: Google-Drive-storage-20gb",
+        "domain": "global",
+        "reason": "invalid"
+      }
+    ]
+  }
+}

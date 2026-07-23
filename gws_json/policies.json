@@ -1,0 +1,813 @@
+{
+  "policies": [
+    {
+      "name": "policies/axxojcw2d647vqocdpezjp4byykto",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756')) && entity.licenses.exists(license, license in ['/product/Google-Apps/sku/1010020025'])",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101
+      },
+      "setting": {
+        "type": "settings/gmail.user_email_uploads",
+        "value": {
+          "enableMailAndContactsImport": false
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d7lofpofd2ijlmho3afcg",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00003
+      },
+      "setting": {
+        "type": "settings/blogger.user_takeout",
+        "value": {
+          "takeoutStatus": "ENABLED"
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d65lbepmbte3xegeyift6",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00007
+      },
+      "setting": {
+        "type": "settings/cloud_sharing_options.cloud_data_sharing",
+        "value": {
+          "sharingOptions": "DISABLED"
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d6ilhnoletunrgxt7qbcg",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00013
+      },
+      "setting": {
+        "type": "settings/books.user_takeout",
+        "value": {
+          "takeoutStatus": "ENABLED"
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d72ibcpsclwz7ehl3mkcg",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00017
+      },
+      "setting": {
+        "type": "settings/play.user_takeout",
+        "value": {
+          "takeoutStatus": "ENABLED"
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d663vchqep7nh7ng34hcg",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00034
+      },
+      "setting": {
+        "type": "settings/pay.user_takeout",
+        "value": {
+          "takeoutStatus": "ENABLED"
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d6qyrxewcl5mp46t7mnsg",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00038
+      },
+      "setting": {
+        "type": "settings/maps.user_takeout",
+        "value": {
+          "takeoutStatus": "ENABLED"
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d6y2pm5yb2xopkvd64lvo",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00054
+      },
+      "setting": {
+        "type": "settings/api_controls.custom_user_message",
+        "value": {
+          "errorText": ""
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d6y2pm5yb2xopkvd64lvq",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00054
+      },
+      "setting": {
+        "type": "settings/api_controls.internal_apps",
+        "value": {
+          "trustInternalApps": true
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d6y2pm5yb2xopkvd64lvs",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00054
+      },
+      "setting": {
+        "type": "settings/api_controls.unconfigured_third_party_apps",
+        "value": {
+          "accessLevel": "ACCESS_LEVEL_UNSPECIFIED",
+          "accessLevelUnder18": "ACCESS_LEVEL_UNDER18_UNSPECIFIED"
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d6y2pm5yb2xopkvd64lvw",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00054
+      },
+      "setting": {
+        "type": "settings/api_controls.app_approval_requests",
+        "value": {
+          "allowedForAll": "ENABLED"
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d7vmdw4ueopo3ge62accg",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00055
+      },
+      "setting": {
+        "type": "settings/photos.user_takeout",
+        "value": {
+          "takeoutStatus": "ENABLED"
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d7hi7l53cgcib7vrw4lsg",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00059
+      },
+      "setting": {
+        "type": "settings/play_console.user_takeout",
+        "value": {
+          "takeoutStatus": "ENABLED"
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d6zjdr5fegw2h2go3eoj6ai",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00063
+      },
+      "setting": {
+        "type": "settings/directory.workspace_resource_type_visibility",
+        "value": {
+          "googleGroups": true,
+          "domainSharedContacts": true
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d7a4ncw2bkt335wn7mlsg",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.0007
+      },
+      "setting": {
+        "type": "settings/location_history.user_takeout",
+        "value": {
+          "takeoutStatus": "ENABLED"
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d6s4riwedkjnvrfpuefae",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00074
+      },
+      "setting": {
+        "type": "settings/security.advanced_protection_program",
+        "value": {
+          "enableAdvancedProtectionSelfEnrollment": true,
+          "securityCodeOption": "ALLOWED_WITHOUT_REMOTE_ACCESS"
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d6s4riwedkjnvrfpuefag",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00074
+      },
+      "setting": {
+        "type": "settings/security.login_challenges",
+        "value": {
+          "enableEmployeeIdChallenge": false
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d6s4riwedkjnvrfpuefam",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00074
+      },
+      "setting": {
+        "type": "settings/security.super_admin_account_recovery",
+        "value": {
+          "enableAccountRecovery": true
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d6s4riwedkjnvrfpuefao",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00074
+      },
+      "setting": {
+        "type": "settings/security.session_controls",
+        "value": {
+          "webSessionDuration": "1209600s"
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d6s4riwedkjnvrfpuefaq",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00074
+      },
+      "setting": {
+        "type": "settings/security.password",
+        "value": {
+          "allowedStrength": "STRONG",
+          "minimumLength": 8,
+          "maximumLength": 100,
+          "enforceRequirementsAtLogin": false,
+          "allowReuse": false,
+          "expirationDuration": "0s"
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d6s4riwedkjnvrfpuefgu",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00074
+      },
+      "setting": {
+        "type": "settings/security.passkeys_restriction",
+        "value": {
+          "allowedPasskeysType": "ANY_DEVICE_OR_PLATFORM"
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d7pk5bw5bx2z3u5j3mhcg",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00075
+      },
+      "setting": {
+        "type": "settings/youtube.user_takeout",
+        "value": {
+          "takeoutStatus": "ENABLED"
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d7blbhwhdxklpmh2ymcgi",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00079
+      },
+      "setting": {
+        "type": "settings/data_regions.data_processing_region",
+        "value": {
+          "limitToStorageRegion": false
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/axxojcw2d7blbhwhdxklpmh2ymcgk",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 101.00079
+      },
+      "setting": {
+        "type": "settings/data_regions.data_at_rest_region",
+        "value": {
+          "region": "ANY_REGION"
+        }
+      },
+      "type": "SYSTEM"
+    },
+    {
+      "name": "policies/ahxojcw2d63ypxp4dkijlmho3afac",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00243
+      },
+      "setting": {
+        "type": "settings/blogger.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d7yo3qevb2b6d2xc6enac",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00244
+      },
+      "setting": {
+        "type": "settings/cloud.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d6uyr2preky7hphmwicqc",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00245
+      },
+      "setting": {
+        "type": "settings/trips.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d7ro5tekc3vnpdv2zilqc",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00246
+      },
+      "setting": {
+        "type": "settings/data_studio.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d7ko7wh7dxsynwnj3aeac",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00248
+      },
+      "setting": {
+        "type": "settings/material_gallery.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d6g5npeychunrgxt7qbac",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00249
+      },
+      "setting": {
+        "type": "settings/books.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d7dlzifratbjnfolradqc",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.0025
+      },
+      "setting": {
+        "type": "settings/fi.service_status",
+        "value": {
+          "serviceState": "DISABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d775nsendhv3xf6i3amqc",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00251
+      },
+      "setting": {
+        "type": "settings/search_ads_360.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d64l3lfgbtr3fe7yuqeac",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00252
+      },
+      "setting": {
+        "type": "settings/my_maps.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d7y5pvecehwz7ehl3mkac",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00253
+      },
+      "setting": {
+        "type": "settings/play.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d7r2jhfua7omxn5mqmgac",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00255
+      },
+      "setting": {
+        "type": "settings/chrome_remote_desktop.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d6ol7reqdt52hb6gf4aq",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00256
+      },
+      "setting": {
+        "type": "settings/scholar_profiles.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d6hmbuefesv6hs54naaq",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00258
+      },
+      "setting": {
+        "type": "settings/voice.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d7d2nne6c7g2hufksenqc",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00259
+      },
+      "setting": {
+        "type": "settings/ads.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d642pqetd7x4bpnu7ekac",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00261
+      },
+      "setting": {
+        "type": "settings/search_and_assistant.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d7zi3jfmcld6lfvksqmqc",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00262
+      },
+      "setting": {
+        "type": "settings/groups_for_business.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d7si5mfbdkgol76sqeiac",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00264
+      },
+      "setting": {
+        "type": "settings/earth.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d6o7le52bx7nh7ng34hac",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00265
+      },
+      "setting": {
+        "type": "settings/pay.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d7li7pewekynnh7cumcac",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00266
+      },
+      "setting": {
+        "type": "settings/appsheet.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d6h7nh5pcxlm56uqqmbac",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00267
+      },
+      "setting": {
+        "type": "settings/chrome_cursive.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d7enza6ibd5mp46t7mnqc",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00268
+      },
+      "setting": {
+        "type": "settings/maps.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d6a7pk5edxymhd5msecqc",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00269
+      },
+      "setting": {
+        "type": "settings/chrome_sync.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d65n3d55cculfz6s34cqc",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.0027
+      },
+      "setting": {
+        "type": "settings/play_books_partner_center.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d7z7pn4zexbzj46wtumac",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00271
+      },
+      "setting": {
+        "type": "settings/adsense.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d6wn5g5sdccpzkhps4lac",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00272
+      },
+      "setting": {
+        "type": "settings/alerts.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    },
+    {
+      "name": "policies/ahxojcw2d7s4j76kbob6vdhvuqmqc",
+      "customer": "customers/C04h6t51g",
+      "policyQuery": {
+        "query": "entity.org_units.exists(org_unit, org_unit.org_unit_id == orgUnitId('03ph8a2z3am9756'))",
+        "orgUnit": "orgUnits/03ph8a2z3am9756",
+        "sortOrder": 201.00273
+      },
+      "setting": {
+        "type": "settings/read_along.service_status",
+        "value": {
+          "serviceState": "ENABLED"
+        }
+      },
+      "type": "ADMIN"
+    }
+  ],
+  "nextPageToken": "AeyhhmAoI_uCTLdWUuNL8RWBvVgaPQ2VOPdliwE27o36TOgUoJv_IpCL6vszGCfhLskEHhDhvDfkq5ujoBtk02KsZX6zBNGB3i-GIC98OZs4tyAoLOfBQywwP_kwtPWl"
+}

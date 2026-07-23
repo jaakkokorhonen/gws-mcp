@@ -1,0 +1,71 @@
+{
+  "kind": "admin#directory#users",
+  "etag": "\"MuBF61fZ6eIjI81hoRhKEXyx1naL3QsylnH3YakomIY/7kIzNMuaUuyklMplzj7P84qPObI\"",
+  "users": [
+    {
+      "kind": "admin#directory#user",
+      "id": "111820988087720333342",
+      "etag": "\"MuBF61fZ6eIjI81hoRhKEXyx1naL3QsylnH3YakomIY/j5-bgGCTTno951FhNH3nUvYA9WA\"",
+      "primaryEmail": "jaakko@falko.fi",
+      "name": {
+        "givenName": "Jaakko",
+        "familyName": "Korhonen",
+        "fullName": "Jaakko Korhonen"
+      },
+      "isAdmin": true,
+      "isDelegatedAdmin": false,
+      "lastLoginTime": "2026-07-23T14:23:35.000Z",
+      "creationTime": "2026-07-21T12:11:38.000Z",
+      "agreedToTerms": true,
+      "suspended": false,
+      "archived": false,
+      "changePasswordAtNextLogin": false,
+      "ipWhitelisted": false,
+      "emails": [
+        {
+          "address": "jaakko@falko.fi",
+          "primary": true
+        },
+        {
+          "address": "jaakko@falko.fi.test-google-a.com"
+        },
+        {
+          "address": "jaakko.korhonen@falko.fi"
+        },
+        {
+          "address": "jaakko.korhonen@falko.fi.test-google-a.com"
+        },
+        {
+          "address": "security@falko.fi"
+        },
+        {
+          "address": "security@falko.fi.test-google-a.com"
+        }
+      ],
+      "languages": [
+        {
+          "languageCode": "en",
+          "preference": "preferred"
+        }
+      ],
+      "aliases": [
+        "jaakko.korhonen@falko.fi",
+        "security@falko.fi"
+      ],
+      "nonEditableAliases": [
+        "jaakko@falko.fi.test-google-a.com",
+        "jaakko.korhonen@falko.fi.test-google-a.com",
+        "security@falko.fi.test-google-a.com"
+      ],
+      "customerId": "C04h6t51g",
+      "orgUnitPath": "/",
+      "isMailboxSetup": true,
+      "isEnrolledIn2Sv": true,
+      "isEnforcedIn2Sv": true,
+      "includeInGlobalAddressList": true,
+      "recoveryEmail": "jaakko.korhonen@gmail.com",
+      "recoveryPhone": "+358503285285",
+      "isGuestUser": false
+    }
+  ]
+}

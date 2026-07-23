@@ -1,0 +1,12 @@
+[
+  {
+    "kind": "licensing#licenseAssignment",
+    "etags": "\"8kcfjg5dt_zj7RHpBFcv2aUtxidb7JlWC8y4NEuU9BE/R-Xfd_W3Qgpl-9xMYmJkNwvUCuI\"",
+    "productId": "Google-Apps",
+    "userId": "jaakko@falko.fi",
+    "selfLink": "https://licensing.googleapis.com/apps/licensing/v1/product/Google-Apps/sku/1010020025/user/jaakko@falko.fi",
+    "skuId": "1010020025",
+    "skuName": "Google Workspace Business Plus",
+    "productName": "Google Workspace"
+  }
+]
