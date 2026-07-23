@@ -335,53 +335,23 @@ KNOWN_GWS_PRODUCTS: dict[str, dict] = {
 # ===========================================================================
 
 @mcp.tool()
-def admin_list_users(max_results: int = 0) -> str:
-    """List users in the Google Workspace domain.
-
-    Parameters
-    ----------
-    max_results:
-        Maximum number of users to return.  Pass 0 (default) to return
-        all users; the function handles pagination automatically.
-
-    Returns
-    -------
-    One user per line in the format ``email (Full Name)``, or a message
-    if no users are found.  API errors are returned as a string so the
-    LLM can relay them to the operator.
-    """
+def admin_list_users(max_results: int = 0, page_token: str = None) -> str:
+    """List users in the Google Workspace domain."""
     service = get_service("admin", "directory_v1")
     try:
-        all_users: list[dict] = []
-        page_token: str | None = None
-
-        while True:
-            # The Directory API caps maxResults at 500 per page.
-            per_page = 500
-            if max_results > 0:
-                per_page = min(max_results - len(all_users), 500)
-
-            results = service.users().list(
-                customer="my_customer",
-                orderBy="email",
-                maxResults=per_page,
-                pageToken=page_token,
-            ).execute()
-
-            all_users.extend(results.get("users", []))
-            page_token = results.get("nextPageToken")
-
-            # Stop when the API reports no more pages, or we have enough.
-            if not page_token or (max_results > 0 and len(all_users) >= max_results):
-                break
-
-        if not all_users:
-            return "No users found."
-        return "\n".join(
-            f"{u['primaryEmail']} ({u['name']['fullName']})" for u in all_users
-        )
+        kwargs = {
+            "customer": "my_customer",
+            "orderBy": "email"
+        }
+        if max_results > 0:
+            kwargs["maxResults"] = max_results
+        if page_token:
+            kwargs["pageToken"] = page_token
+            
+        results = service.users().list(**kwargs).execute()
+        return json.dumps(results, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 @mcp.tool()
@@ -421,9 +391,9 @@ def admin_create_user(
     }
     try:
         user = service.users().insert(body=body).execute()
-        return f"User created: {user['primaryEmail']} (ID: {user['id']})"
+        return json.dumps(user, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 @mcp.tool()
@@ -475,7 +445,7 @@ def admin_update_user(
             ).execute()
             body["name"] = dict(current.get("name", {}))
         except HttpError as e:
-            return f"API error {e.resp.status}: {e._get_reason()}"
+            return e.content.decode("utf-8")
         if given_name is not None:
             body["name"]["givenName"] = given_name
         if family_name is not None:
@@ -491,9 +461,9 @@ def admin_update_user(
 
     try:
         service.users().patch(userKey=user_email, body=body).execute()
-        return f"User {user_email} updated: {json.dumps(body)}"
+        return json.dumps(body, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 # ===========================================================================
@@ -501,45 +471,20 @@ def admin_update_user(
 # ===========================================================================
 
 @mcp.tool()
-def admin_list_groups(max_results: int = 0) -> str:
-    """List groups in the Google Workspace domain.
-
-    Parameters
-    ----------
-    max_results:
-        Maximum number of groups to return.  Pass 0 (default) to return
-        all groups; the function handles pagination automatically.
-    """
+def admin_list_groups(max_results: int = 0, page_token: str = None) -> str:
+    """List groups in the Google Workspace domain."""
     service = get_service("admin", "directory_v1")
     try:
-        all_groups: list[dict] = []
-        page_token: str | None = None
-
-        while True:
-            # Directory API caps groups.list at 200 per page.
-            per_page = 200
-            if max_results > 0:
-                per_page = min(max_results - len(all_groups), 200)
-
-            results = service.groups().list(
-                customer="my_customer",
-                maxResults=per_page,
-                pageToken=page_token,
-            ).execute()
-
-            all_groups.extend(results.get("groups", []))
-            page_token = results.get("nextPageToken")
-
-            if not page_token or (max_results > 0 and len(all_groups) >= max_results):
-                break
-
-        if not all_groups:
-            return "No groups found."
-        return "\n".join(
-            f"{g['email']} ({g['name']}) - ID: {g['id']}" for g in all_groups
-        )
+        kwargs = {"customer": "my_customer"}
+        if max_results > 0:
+            kwargs["maxResults"] = max_results
+        if page_token:
+            kwargs["pageToken"] = page_token
+            
+        results = service.groups().list(**kwargs).execute()
+        return json.dumps(results, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 @mcp.tool()
@@ -551,9 +496,9 @@ def admin_create_group(
     body = {"email": group_email, "name": group_name, "description": description}
     try:
         group = service.groups().insert(body=body).execute()
-        return f"Group created: {group['email']} (ID: {group['id']})"
+        return json.dumps(group, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 # Valid role values accepted by the Directory API members.insert endpoint.
@@ -580,10 +525,10 @@ def admin_add_group_member(
     service = get_service("admin", "directory_v1")
     body = {"email": member_email, "role": role}
     try:
-        service.members().insert(groupKey=group_email, body=body).execute()
-        return f"Added {member_email} as {role} to group {group_email}"
+        member = service.members().insert(groupKey=group_email, body=body).execute()
+        return json.dumps(member, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 @mcp.tool()
@@ -594,7 +539,7 @@ def admin_get_group_settings(group_email: str) -> str:
         results = service.groups().get(groupUniqueId=group_email).execute()
         return json.dumps(results, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 @mcp.tool()
@@ -615,9 +560,9 @@ def admin_update_group_settings(group_email: str, settings_json: str) -> str:
         results = service.groups().patch(
             groupUniqueId=group_email, body=body
         ).execute()
-        return f"Group {group_email} settings updated: {json.dumps(results, indent=2)}"
+        return json.dumps(results, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 # ===========================================================================
@@ -648,12 +593,9 @@ def licensing_list_user_licenses(user_email: str) -> str:
         results = service.licenseAssignments().listForUser(
             userId=user_email
         ).execute()
-        assignments = results.get("items", [])
-        if not assignments:
-            return f"No license assignments found for user {user_email}."
-        return json.dumps(assignments, indent=2)
+        return json.dumps(results, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 @mcp.tool()
@@ -670,9 +612,9 @@ def licensing_assign_license(
         assignment = service.licenseAssignments().insert(
             productId=product_id, skuId=sku_id, body=body
         ).execute()
-        return f"License assigned: {json.dumps(assignment, indent=2)}"
+        return json.dumps(assignment, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 @mcp.tool()
@@ -685,9 +627,9 @@ def licensing_remove_license(
         service.licenseAssignments().delete(
             productId=product_id, skuId=sku_id, userId=user_email
         ).execute()
-        return f"License {sku_id} removed from {user_email}."
+        return json.dumps({"status": "success"}, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 # ===========================================================================
@@ -695,20 +637,19 @@ def licensing_remove_license(
 # ===========================================================================
 
 @mcp.tool()
-def vault_list_matters() -> str:
+def vault_list_matters(page_size: int = 0, page_token: str = None) -> str:
     """List eDiscovery matters in Google Vault."""
     service = get_service("vault", "v1")
     try:
-        results = service.matters().list().execute()
-        matters = results.get("matters", [])
-        if not matters:
-            return "No matters found in Vault."
-        return "\n".join(
-            f"Matter Name: {m['name']} (ID: {m['matterId']}) - State: {m['state']}"
-            for m in matters
-        )
+        kwargs = {}
+        if page_size > 0:
+            kwargs["pageSize"] = page_size
+        if page_token:
+            kwargs["pageToken"] = page_token
+        results = service.matters().list(**kwargs).execute()
+        return json.dumps(results, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 @mcp.tool()
@@ -718,9 +659,9 @@ def vault_create_matter(name: str, description: str = "") -> str:
     body = {"name": name, "description": description}
     try:
         matter = service.matters().create(body=body).execute()
-        return f"Vault matter created: {matter['name']} (ID: {matter['matterId']})"
+        return json.dumps(matter, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 # ===========================================================================
@@ -740,12 +681,9 @@ def admin_list_orgunits(type: str = "all") -> str:
         results = service.orgunits().list(
             customerId="my_customer", type=type
         ).execute()
-        units = results.get("organizationUnits", [])
-        if not units:
-            return "No organizational units found."
-        return json.dumps(units, indent=2)
+        return json.dumps(results, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 @mcp.tool()
@@ -765,9 +703,9 @@ def admin_create_orgunit(
         ou = service.orgunits().insert(
             customerId="my_customer", body=body
         ).execute()
-        return f"Org unit created: {ou['orgUnitPath']} (ID: {ou['orgUnitId']})"
+        return json.dumps(ou, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 # ===========================================================================
@@ -775,40 +713,24 @@ def admin_create_orgunit(
 # ===========================================================================
 
 @mcp.tool()
-def identity_list_devices(customer: str = "my_customer") -> str:
-    """List devices registered in Cloud Identity (all pages).
-
-    Parameters
-    ----------
-    customer: Customer resource name or bare customer ID.
-              Defaults to ``my_customer`` (the authenticated domain).
-    """
+def identity_list_devices(customer: str = "my_customer", page_size: int = 0, page_token: str = None) -> str:
+    """List devices registered in Cloud Identity."""
     service = get_service("cloudidentity", "v1")
-    # Normalise to the full resource name expected by the API.
     parent = (
         f"customers/{customer}"
         if not customer.startswith("customers/")
         else customer
     )
     try:
-        all_devices: list[dict] = []
-        page_token: str | None = None
-
-        while True:
-            kwargs: dict = {"parent": parent}
-            if page_token:
-                kwargs["pageToken"] = page_token
-            results = service.devices().list(**kwargs).execute()
-            all_devices.extend(results.get("devices", []))
-            page_token = results.get("nextPageToken")
-            if not page_token:
-                break
-
-        if not all_devices:
-            return "No devices found."
-        return json.dumps(all_devices, indent=2)
+        kwargs = {"parent": parent}
+        if page_size > 0:
+            kwargs["pageSize"] = page_size
+        if page_token:
+            kwargs["pageToken"] = page_token
+        results = service.devices().list(**kwargs).execute()
+        return json.dumps(results, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 @mcp.tool()
@@ -870,9 +792,9 @@ def identity_update_device_status(
                 "Valid actions: approve, block, wipe, cancel_wipe"
             )
 
-        return f"Device action '{action}' executed: {json.dumps(result, indent=2)}"
+        return json.dumps(result, indent=2) if result else json.dumps({"status": "success"}, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 # ===========================================================================
@@ -881,54 +803,23 @@ def identity_update_device_status(
 
 @mcp.tool()
 def chrome_list_policy_schemas(
-    filter: str = "", page_size: int = 100
+    filter: str = "", page_size: int = 100, page_token: str = None
 ) -> str:
-    """List available Chrome Policy schemas (all pages).
-
-    Chrome Policy API exposes hundreds of policy schemas in the
-    ``chrome.users.*`` and ``chrome.devices.*`` namespaces.  This
-    function iterates all pages automatically.
-
-    Parameters
-    ----------
-    filter:    Optional filter string to narrow results,
-               e.g. ``'chrome.users'`` or ``'chrome.devices'``.
-    page_size: Schemas per API page (default 100, max 1 000).
-
-    Returns
-    -------
-    JSON array of ``{name, description}`` objects.
-    Use a schema's ``name`` as the ``policy_schema`` argument of
-    ``chrome_update_policy``.
-    """
+    """List available Chrome Policy schemas."""
     service = get_service("chromepolicy", "v1")
     try:
-        all_schemas: list[dict] = []
-        page_token: str | None = None
-
-        while True:
-            results = service.customers().policySchemas().list(
-                parent="customers/my_customer",
-                filter=filter,
-                pageSize=page_size,
-                pageToken=page_token,
-            ).execute()
-            all_schemas.extend(results.get("policySchemas", []))
-            page_token = results.get("nextPageToken")
-            if not page_token:
-                break
-
-        if not all_schemas:
-            return "No policy schemas found."
-        return json.dumps(
-            [
-                {"name": s.get("name"), "description": s.get("policyDescription")}
-                for s in all_schemas
-            ],
-            indent=2,
-        )
+        kwargs = {
+            "parent": "customers/my_customer",
+            "filter": filter,
+            "pageSize": page_size
+        }
+        if page_token:
+            kwargs["pageToken"] = page_token
+            
+        results = service.customers().policySchemas().list(**kwargs).execute()
+        return json.dumps(results, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 @mcp.tool()
@@ -992,12 +883,9 @@ def chrome_update_policy(
             .batchModify(customer="customers/my_customer", body=body)
             .execute()
         )
-        return (
-            f"Chrome policy {policy_schema} updated for OU {org_unit_id}: "
-            f"{json.dumps(result, indent=2)}"
-        )
+        return json.dumps(result, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 # ===========================================================================
@@ -1005,17 +893,17 @@ def chrome_update_policy(
 # ===========================================================================
 
 @mcp.tool()
-def accesscontext_list_policies() -> str:
+def accesscontext_list_policies(page_token: str = None) -> str:
     """List Access Context Manager access policies for the organisation."""
     service = get_service("accesscontextmanager", "v1")
     try:
-        results = service.accessPolicies().list().execute()
-        policies = results.get("accessPolicies", [])
-        if not policies:
-            return "No Access Policies found."
-        return json.dumps(policies, indent=2)
+        kwargs = {}
+        if page_token:
+            kwargs["pageToken"] = page_token
+        results = service.accessPolicies().list(**kwargs).execute()
+        return json.dumps(results, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 @mcp.tool()
@@ -1066,7 +954,7 @@ def accesscontext_update_access_level(
                 )
                 .execute()
             )
-            return f"Access level updated: {json.dumps(result, indent=2)}"
+            return json.dumps(result, indent=2)
         else:
             # Create a new access level under the specified policy.
             parent = f"accessPolicies/{policy_id.split('/')[-1]}"
@@ -1076,9 +964,9 @@ def accesscontext_update_access_level(
                 .create(parent=parent, body=body)
                 .execute()
             )
-            return f"Access level created: {json.dumps(result, indent=2)}"
+            return json.dumps(result, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 # ===========================================================================
@@ -1086,19 +974,19 @@ def accesscontext_update_access_level(
 # ===========================================================================
 
 @mcp.tool()
-def identity_list_policies(filter: str = "") -> str:
-    """List Cloud Identity policies (DLP rules, Workspace policies, etc.).
-
-    Parameters
-    ----------
-    filter: Optional CEL filter string to narrow results.
-    """
+def identity_list_policies(filter: str = "", page_token: str = None) -> str:
+    """List Cloud Identity policies (DLP rules, Workspace policies, etc.)."""
     service = get_service("cloudidentity", "v1")
     try:
-        results = service.policies().list(filter=filter).execute()
+        kwargs = {}
+        if filter:
+            kwargs["filter"] = filter
+        if page_token:
+            kwargs["pageToken"] = page_token
+        results = service.policies().list(**kwargs).execute()
         return json.dumps(results, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 @mcp.tool()
@@ -1159,9 +1047,9 @@ def identity_create_policy(
 
     try:
         result = service.policies().create(body=body).execute()
-        return f"Policy created: {json.dumps(result, indent=2)}"
+        return json.dumps(result, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 @mcp.tool()
@@ -1187,9 +1075,9 @@ def identity_patch_policy(
         result = service.policies().patch(
             name=policy_name, body=body, updateMask=update_mask
         ).execute()
-        return f"Policy updated: {json.dumps(result, indent=2)}"
+        return json.dumps(result, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 @mcp.tool()
@@ -1203,9 +1091,9 @@ def identity_delete_policy(policy_name: str) -> str:
     service = get_service("cloudidentity", "v1")
     try:
         service.policies().delete(name=policy_name).execute()
-        return f"Policy deleted: {policy_name}"
+        return json.dumps({"status": "success"}, indent=2)
     except HttpError as e:
-        return f"API error {e.resp.status}: {e._get_reason()}"
+        return e.content.decode("utf-8")
 
 
 if __name__ == "__main__":
