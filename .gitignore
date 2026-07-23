@@ -5,3 +5,5 @@ __pycache__/
 .gemini/
 client_secret*.json
 token.json
+gws_json/
+
