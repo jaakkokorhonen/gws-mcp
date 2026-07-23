@@ -8,7 +8,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from mcp_server import get_credentials, KNOWN_GWS_PRODUCTS
 
 creds = get_credentials()
-output_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "gws_raw_data")
+output_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "gws_json")
 os.makedirs(output_dir, exist_ok=True)
 
 def save_raw(filename, data):

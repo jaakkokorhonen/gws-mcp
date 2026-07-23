@@ -52,7 +52,7 @@ To authenticate locally, the server requires OAuth 2.0 Desktop Application crede
 
 ## GWS Configuration Extraction
 
-A helper script `gws_json.py` is included to dump raw Google Workspace configuration data directly to local files inside the `gws_raw_data/` directory.
+A helper script `gws_json.py` is included to dump raw Google Workspace configuration data directly to local files inside the `gws_json/` directory.
 
 Run the extraction script:
 ```bash
