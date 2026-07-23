@@ -82,8 +82,6 @@ SCOPES = [
     "https://www.googleapis.com/auth/chrome.management.policy",
     # Cloud Identity Policies — DLP and org policy rules
     "https://www.googleapis.com/auth/cloud-identity.policies",
-    # Cloud Identity Devices — list and view devices
-    "https://www.googleapis.com/auth/cloud-identity.devices.readonly",
 ]
 
 mcp = FastMCP("gws-mcp")
